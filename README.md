@@ -14,9 +14,9 @@
 
 ---
 
-> **[GIF placeholder]** — Add a screen recording of your skeleton demo here.
-> 
-> *Tip: Use [WWDC Sample App Simulator](https://developer.apple.com/documentation/) to record a GIF.*
+<p align="center">
+  <img src="assets/demo.gif" width="320"/>
+</p>
 
 ---
 
