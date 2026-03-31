@@ -1,36 +1,29 @@
 // swift-tools-version: 5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
 import PackageDescription
 
 let package = Package(
     name: "SkeletonUI",
+    defaultLocalization: "en",
     platforms: [
-        .iOS(.v16),
-        .macOS(.v13),
-        .tvOS(.v16),
-        .watchOS(.v9),
-        .visionOS(.v1)
+        .iOS(.v14),
+        .macOS(.v11),
+        .tvOS(.v14),
+        .watchOS(.v7)
     ],
     products: [
         .library(
             name: "SkeletonUI",
-            targets: ["SkeletonUI"]
-        ),
+            targets: ["SkeletonUI"]),
     ],
+    dependencies: [],
     targets: [
         .target(
             name: "SkeletonUI",
-            path: "Sources/SkeletonUI",
-            swiftSettings: [
-                .enableExperimentalFeature("StrictConcurrency")
-            ]
-        ),
+            dependencies: [],
+            path: "Sources/SkeletonUI"),
         .testTarget(
             name: "SkeletonUITests",
             dependencies: ["SkeletonUI"],
-            path: "Tests/SkeletonUITests"
-        ),
-    ],
-    swiftLanguageVersions: [.v5]
+            path: "Tests/SkeletonUITests"),
+    ]
 )

@@ -1,66 +1,50 @@
 import SwiftUI
 
-// MARK: - ShimmerView
-
-/// An internal view that renders the animated shimmer gradient.
-///
-/// This is the engine behind the skeleton effect. It renders a `LinearGradient`
-/// whose start/end points are animated from off-screen left to off-screen right,
-/// producing the signature "sweeping highlight" shimmer.
-struct ShimmerView: View {
-
-    // MARK: - Configuration
-
-    let config: SkeletonConfiguration
-
-    // MARK: - State
-
-    @State private var isAnimating = false
-
-    // MARK: - Gradient Points
-
-    private var startPoint: UnitPoint {
-        isAnimating ? UnitPoint(x: 1.5, y: 0.5) : UnitPoint(x: -0.5, y: 0.5)
+/// A GPU-accelerated shimmer effect used as the base for skeletons.
+@MainActor
+public struct ShimmerView: View {
+    
+    // MARK: - Properties
+    
+    private let configuration: SkeletonConfiguration
+    @State private var phase: CGFloat = 0
+    
+    // MARK: - Init
+    
+    public init(configuration: SkeletonConfiguration = .default) {
+        self.configuration = configuration
     }
-
-    private var endPoint: UnitPoint {
-        isAnimating ? UnitPoint(x: 2.5, y: 0.5) : UnitPoint(x: 0.5, y: 0.5)
-    }
-
+    
     // MARK: - Body
-
-    var body: some View {
-        LinearGradient(
-            stops: [
-                .init(color: config.baseColor, location: 0.0),
-                .init(color: config.baseColor, location: 0.35),
-                .init(color: config.highlightColor, location: 0.50),
-                .init(color: config.baseColor, location: 0.65),
-                .init(color: config.baseColor, location: 1.0),
-            ],
-            startPoint: startPoint,
-            endPoint: endPoint
-        )
+    
+    public var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                // Base Background
+                configuration.baseColor
+                
+                // Animated Highlight
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        .clear,
+                        configuration.highlightColor,
+                        .clear
+                    ]),
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+                .frame(width: geometry.size.width * 2)
+                .offset(x: -geometry.size.width + (geometry.size.width * 2 * phase))
+            }
+        }
         .onAppear {
-            guard config.isAnimated else { return }
-
+            guard configuration.isAnimated else { return }
             withAnimation(
-                .linear(duration: config.animationDuration)
+                .linear(duration: configuration.animationDuration)
                 .repeatForever(autoreverses: false)
             ) {
-                isAnimating = true
+                phase = 1
             }
         }
     }
 }
-
-// MARK: - Preview
-
-#if DEBUG
-#Preview("Shimmer") {
-    ShimmerView(config: .default)
-        .frame(height: 40)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .padding()
-}
-#endif
