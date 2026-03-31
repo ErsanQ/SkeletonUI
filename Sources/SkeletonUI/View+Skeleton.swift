@@ -1,59 +1,28 @@
 import SwiftUI
 
-// MARK: - View+Skeleton (Public API)
-
 public extension View {
-
-    // MARK: - Primary API
-
-    /// Overlays a shimmer skeleton placeholder on this view while data is loading.
+    /// Adds a shimmering skeleton overlay to the view when a condition is met.
+    ///
+    /// - Parameters:
+    ///   - active: If true, the skeleton shimmer is visible.
+    ///   - config: Custom configuration for the shimmer effect.
+    /// - Returns: A view that displays a skeleton when active.
     @MainActor
-    @ViewBuilder
-    func skeleton(
-        isLoading: Bool,
-        shape: SkeletonShape = .rectangle(cornerRadius: 8),
-        config: SkeletonConfiguration = .default
-    ) -> some View {
-        modifier(SkeletonModifier(isLoading: isLoading, shape: shape, config: config))
-    }
-
-    // MARK: - Accessibility-aware API
-
-    /// Overlays a shimmer skeleton, automatically respecting the system's "Reduce Motion" setting.
-    @MainActor
-    @ViewBuilder
-    func skeletonAccessible(
-        isLoading: Bool,
-        shape: SkeletonShape = .rectangle(cornerRadius: 8)
-    ) -> some View {
-        SkeletonAccessibleWrapper(isLoading: isLoading, shape: shape) {
-            self
-        }
+    func skeleton(active: Bool, config: SkeletonConfiguration = .default) -> some View {
+        self.modifier(SkeletonModifier(active: active, config: config))
     }
 }
 
-// MARK: - Accessibility Wrapper
-
+/// An internal ViewModifier that handles the conditional rendering of the skeleton overlay.
 @MainActor
-private struct SkeletonAccessibleWrapper<Content: View>: View {
-
-    let isLoading: Bool
-    let shape: SkeletonShape
-    let content: Content
-
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    init(isLoading: Bool, shape: SkeletonShape, @ViewBuilder content: () -> Content) {
-        self.isLoading = isLoading
-        self.shape = shape
-        self.content = content()
-    }
-
-    var body: some View {
-        content.skeleton(
-            isLoading: isLoading,
-            shape: shape,
-            config: reduceMotion ? .reducedMotion : .default
-        )
+private struct SkeletonModifier: ViewModifier {
+    let active: Bool
+    let config: SkeletonConfiguration
+    
+    func body(content: Content) -> some View {
+        content
+            .overlay(
+                active ? ShimmerView(config: config).mask(content) : nil
+            )
     }
 }
