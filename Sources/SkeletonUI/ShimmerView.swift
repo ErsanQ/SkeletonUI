@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 
 /// A view that renders a moving shimmer effect, typical of skeleton loaders.
@@ -33,3 +34,4 @@ public struct ShimmerView: View {
         }
     }
 }
+#endif

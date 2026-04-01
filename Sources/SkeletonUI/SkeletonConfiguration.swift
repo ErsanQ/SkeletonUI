@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 
 /// Configuration for the visual and behavioral aspects of a skeleton loader.
@@ -27,3 +28,4 @@ public struct SkeletonConfiguration: Sendable {
     /// The standard ErsanQ skeleton style.
     public static let `default` = SkeletonConfiguration()
 }
+#endif

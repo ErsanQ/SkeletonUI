@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 
 // MARK: - SkeletonShape
@@ -36,3 +37,4 @@ public enum SkeletonShape: Sendable {
     /// Best suited for tags, badges, and button placeholders.
     case capsule
 }
+#endif

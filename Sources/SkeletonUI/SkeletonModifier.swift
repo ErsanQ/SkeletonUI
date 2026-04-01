@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 
 /// A ViewModifier that overlays a skeleton placeholder on any view.
@@ -14,7 +15,7 @@ public struct SkeletonModifier: ViewModifier {
             .overlay(
                 ZStack {
                     if isLoading {
-                        ShimmerView(configuration: config)
+                        ShimmerView(config: config)
                             .skeletonClip(shape: shape)
                             .transition(.opacity.combined(with: .scale(scale: 0.95)))
                     }
@@ -37,3 +38,4 @@ private extension View {
         }
     }
 }
+#endif
