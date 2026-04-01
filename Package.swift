@@ -24,7 +24,6 @@ let package = Package(
             path: "Sources/SkeletonUI"),
         .testTarget(
             name: "SkeletonUITests",
-            dependencies: ["SkeletonUI"],
-            path: "Tests/SkeletonUITests"),
+            dependencies: ["SkeletonUI"]),
     ]
 )
